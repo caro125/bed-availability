@@ -8,24 +8,36 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.Button
 import android.widget.EditText
+import com.example.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 class Login : AppCompatActivity() {
+
+    private lateinit var usernameEditText: EditText
+    private lateinit var passwordEditText: EditText
     @SuppressLint("MissingInflatedId")
-    private lateinit var fetchdata:Button
-
-    lateinit var btnLogin: Button
-
-    private lateinit var insertdata: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        // View Binding
-        val firebase : DatabaseReference = FirebaseDatabase.getInstance().getReference()
-        btnLogin = findViewById(R.id.button)
 
+        usernameEditText = findViewById(R.id.editTextTextEmailAddress)
+        passwordEditText = findViewById(R.id.editTextTextPassword2)
+        val loginButton = findViewById<Button>(R.id.button)
+        loginButton.setOnClickListener {
+            val username = usernameEditText.text.toString()
+            val password = passwordEditText.text.toString()
 
+            if (validateUserCredentials(username, password)) {
+                val intent = Intent(this, Adminpage1::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
-
-}}
+    private fun validateUserCredentials(username: String, password: String): Boolean {
+        // Replace this with your own authentication mechanism (e.g., a database of registered users)
+        return username == "admin" && password == "123"
+    }}

@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -13,6 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import com.example.myapplication.databinding.ActivityNavigationDrawerBinding
 
 class navigation_drawer : AppCompatActivity() {
@@ -57,6 +61,30 @@ class navigation_drawer : AppCompatActivity() {
             }
             false
         }
+        val search=findViewById<SearchView>(R.id.search)
+        val listview =findViewById<ListView>(R.id.listview)
+
+        val name=arrayOf("Trichy","Coimbatore","Madurai")
+        val adapter= ArrayAdapter(this, android.R.layout.simple_list_item_1, name)
+        listview.adapter=adapter
+        search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                search.clearFocus()
+                if(name.contains(query)){
+
+                    adapter.filter.filter(query)
+                }
+                else{
+                    Toast.makeText(applicationContext,"item not found", Toast.LENGTH_LONG).show()
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+        })
 
     }
 
@@ -83,4 +111,5 @@ class navigation_drawer : AppCompatActivity() {
         return super.onOptionsItemSelected(item)}
 
     }
+
 }

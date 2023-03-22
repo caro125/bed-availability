@@ -19,5 +19,4 @@ class MainActivity : AppCompatActivity() {
             val intent= Intent(this,navigation_drawer::class.java)
             startActivity(intent)
         }
-
 }}
