@@ -22,4 +22,10 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_navigation_drawer"
         app:menu="@menu/activity_navigation_drawer_drawer" />
+    <androidx.recyclerview.widget.RecyclerView
+
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        tools:listitem="@layout/listitem" />
 </androidx.drawerlayout.widget.DrawerLayout>

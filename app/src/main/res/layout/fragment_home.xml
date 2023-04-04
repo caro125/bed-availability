@@ -26,7 +26,11 @@
         android:layout_marginLeft="35dp"
         android:layout_marginRight="16dp"
         tools:ignore="MissingConstraints"></ListView>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/listitem" />
     <TextView
         android:id="@+id/text_home"
         android:layout_width="match_parent"
@@ -40,4 +44,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </LinearLayout>
