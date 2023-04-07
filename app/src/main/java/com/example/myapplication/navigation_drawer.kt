@@ -33,7 +33,7 @@ class navigation_drawer : AppCompatActivity() {
     private lateinit var adapter: Myadapter
     private lateinit var newArrayList : ArrayList<hospital>
     private lateinit var tempArrayList : ArrayList<hospital>
-
+    private lateinit var news : Array<String>
     lateinit var imageId : Array<Int>
     lateinit var heading : Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,16 +74,18 @@ class navigation_drawer : AppCompatActivity() {
         }
         imageId = arrayOf(
             R.drawable.apolo,
-            R.drawable.cmc,
+
             R.drawable.srm,
-            R.drawable.government
+            R.drawable.government,
+            R.drawable.cmc
         )
 
         heading = arrayOf(
             "Apollo hospital trichy Ariyamangalam Area, Chennai - Madurai Highway, Trichy ",
-            "Christian Medical College Vellore, INDIA, 632002",
+
             "Trichy SRM Medical College Hospital Research Center, SRM Nagar, Trichy – Chennai Highway",
-            "Government medical college")
+            "Government medical college",
+            "Christian Medical College Vellore, INDIA, 632002")
 
         newRecylerview =findViewById(R.id.recyclerView)
 
@@ -106,7 +108,12 @@ class navigation_drawer : AppCompatActivity() {
 
         var name=arrayOf("trichy","coimbatore","vellore")
         val adapter1= ArrayAdapter(this, android.R.layout.simple_list_item_1, name)
-
+        news = arrayOf(
+            getString(R.string.appolo),
+            getString(R.string.cmc),
+            getString(R.string.srm),
+            getString(R.string.gcc)
+        )
 
         listview.adapter=adapter1
         listview.visibility = View.GONE
@@ -116,15 +123,15 @@ class navigation_drawer : AppCompatActivity() {
                 search.clearFocus()
 
                 if(query != null && query.isNotBlank()){
-                if(name.contains(query.toLowerCase())){
-                    listview.visibility = View.VISIBLE
-                    adapter1.filter.filter(query)
+                    if(name.contains(query.toLowerCase())){
+                        listview.visibility = View.VISIBLE
+                        adapter1.filter.filter(query)
 
 
-                }
-                else{
-                    Toast.makeText(applicationContext,"item not found", Toast.LENGTH_LONG).show()
-                }}
+                    }
+                    else{
+                        Toast.makeText(applicationContext,"item not found", Toast.LENGTH_LONG).show()
+                    }}
                 else{
                     adapter1 .clear()
                     listview.visibility = View.GONE
@@ -145,8 +152,8 @@ class navigation_drawer : AppCompatActivity() {
 
             // Start the new activity with the selected item
             if(selectedItem=="trichy"){
-            val intent= Intent(this,page1::class.java)
-            startActivity(intent)}
+                val intent= Intent(this,page2::class.java)
+                startActivity(intent)}
             else if(selectedItem=="coimbatore"){
                 val intent= Intent(this,page1::class.java)
                 startActivity(intent)
@@ -173,6 +180,21 @@ class navigation_drawer : AppCompatActivity() {
 
         }
         newRecylerview.adapter=Myadapter(newArrayList)
+        var adapter=Myadapter(newArrayList)
+        newRecylerview.adapter=adapter
+        //button click
+        adapter.setOnItemClickListener(object:Myadapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+
+
+                val intent = Intent(this@navigation_drawer,NewsActivity::class.java)
+                intent.putExtra("heading",newArrayList[position].heading)
+                intent.putExtra("imageId",newArrayList[position].titleImage)
+                intent.putExtra("news",news[position])
+                startActivity(intent)
+
+            }})
+
     }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_navigation_drawer)
@@ -188,7 +210,7 @@ class navigation_drawer : AppCompatActivity() {
             return true
         }
         else{
-        return super.onOptionsItemSelected(item)}
+            return super.onOptionsItemSelected(item)}
 
     }
 

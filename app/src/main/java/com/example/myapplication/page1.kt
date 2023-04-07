@@ -2,6 +2,7 @@ package com.example.myapplication
 
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,7 +27,7 @@ class page1 : AppCompatActivity() {
     private lateinit var newRecylerview : RecyclerView
     private lateinit var adapter: Myadapter
     private lateinit var newArrayList : ArrayList<hospital>
-    private lateinit var tempArrayList : ArrayList<hospital>
+    private lateinit var news : Array<String>
 
     lateinit var imageId : Array<Int>
     lateinit var heading : Array<String>
@@ -35,17 +36,23 @@ class page1 : AppCompatActivity() {
         setContentView(R.layout.activity_page1)
         imageId = arrayOf(
             R.drawable.apolo,
-            R.drawable.cmc,
             R.drawable.srm,
-            R.drawable.government
+            R.drawable.government ,
+            R.drawable.cmc,
         )
 
         heading = arrayOf(
-            "Apollo hospital trichy Ariyamangalam Area, Chennai - Madurai Highway, Trichy ",
-            "Christian Medical College Vellore, INDIA, 632002",
-            "Trichy SRM Medical College Hospital Research Center, SRM Nagar, Trichy – Chennai Highway",
-        "Government medical college")
+            "APOLLO HOSPITAL TRICHY",
+            "SRM TRICHY",
+        "GOVERNMENT MEDICAL COLLEGE TRICHY",
+            "CMC VELLORE",)
+        news = arrayOf(
+            getString(R.string.appolo),
 
+            getString(R.string.srm),
+            getString(R.string.gcc),
+            getString(R.string.cmc),
+        )
         newRecylerview =findViewById(R.id.recyclerView)
 
 
@@ -61,6 +68,7 @@ class page1 : AppCompatActivity() {
         getUserdata()
 
     }
+    @SuppressLint("SuspiciousIndentation")
     private fun getUserdata() {
 
         for(i in imageId.indices){
@@ -69,5 +77,21 @@ class page1 : AppCompatActivity() {
             newArrayList.add(news)
 
         }
-     newRecylerview.adapter=Myadapter(newArrayList)
+        var adapter=Myadapter(newArrayList)
+     newRecylerview.adapter=adapter
+        //button click
+        adapter.setOnItemClickListener(object:Myadapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+
+
+                val intent = Intent(this@page1,NewsActivity::class.java)
+                intent.putExtra("heading",newArrayList[position].heading)
+                intent.putExtra("imageId",newArrayList[position].titleImage)
+                intent.putExtra("news",news[position])
+
+
+                startActivity(intent)
+
+            }})
+
     }}
