@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -25,6 +27,8 @@ class Request : AppCompatActivity() {
     private lateinit var firstname1: EditText
     private lateinit  var age: EditText
     private lateinit var number: EditText
+    private lateinit var r:String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +38,8 @@ class Request : AppCompatActivity() {
         name.text="Your severity level is "+name1
         var position=intent.getIntExtra("key1",0)
         position=position+1
-       // database= Firebase.database.reference
+        val check=intent.getIntExtra("value",0)
+        // database= Firebase.database.reference
         firebaseAuth=FirebaseAuth.getInstance()
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("bed")
@@ -45,28 +50,33 @@ class Request : AppCompatActivity() {
 
         button.setOnClickListener{
 
+
+            if(check==0){
+
             if(name1=="normal"){
                 val id= position
                 val userRef = myRef.child(id.toString()).child("normal")
                 var isDecrementDone = false
                 var isDecrementDone1 = false
+
                 userRef.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val value = dataSnapshot.child("vacancy").value.toString()
                         val vacancy = value.toInt()
-                        if (vacancy >= 1) { // check if the value has not been decremented
-                            Toast.makeText(this@Request, "$vacancy", Toast.LENGTH_SHORT ).show()
+
+                        if (vacancy >= 1) {
                             val occupiedRef = dataSnapshot.ref.child("occupied")
                             val vacant = dataSnapshot.ref.child("vacancy")
                             if (!isDecrementDone) {
                                 occupiedRef.runTransaction(object : Transaction.Handler {
                                     override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
                                         val currentOccupied =
                                             mutableData.getValue(Int::class.java) ?: 0
                                         mutableData.value =
-                                            currentOccupied + 1 // decrement the value
-                                        isDecrementDone = true
+                                            currentOccupied + 1
 
+                                            isDecrementDone = true
                                         return Transaction.success(mutableData)
                                     }
 
@@ -75,18 +85,21 @@ class Request : AppCompatActivity() {
                                         committed: Boolean,
                                         currentData: DataSnapshot?
                                     ) {
-                                        TODO("Not yet implemented")
+
                                     }
 
                                 })
                             }
                             if (!isDecrementDone1) {
+
                                 vacant.runTransaction(object : Transaction.Handler {
                                     override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
                                         val currentOccupied =
                                             mutableData.getValue(Int::class.java) ?: 0
                                         mutableData.value =
-                                            currentOccupied - 1 // decrement the value
+                                            currentOccupied - 1
+
                                         isDecrementDone1 = true
                                         return Transaction.success(mutableData)
                                     }
@@ -96,13 +109,15 @@ class Request : AppCompatActivity() {
                                         committed: Boolean,
                                         currentData: DataSnapshot?
                                     ) {
-                                        TODO("Not yet implemented")
+
                                     }
                                 })
                             }
+
                             val firstName = firstname1.text.toString()
                             val age = age.text.toString()
                             val number1 = number.text.toString()
+
                             val user1=user(firstName,age,number1,"normal")
                             val userRef = myRef.child(id.toString()).child("detail").push()
                             userRef.setValue(user1, object : DatabaseReference.CompletionListener {
@@ -110,48 +125,59 @@ class Request : AppCompatActivity() {
                                     error: DatabaseError?,
                                     ref: DatabaseReference
                                 ) {
-                                    if (error != null) {
-                                        // Handle error
-                                        Log.d(TAG, "Data could not be saved: $error")
-                                    } else {
-                                        // Insert successful
-                                        Log.d(TAG, "Data inserted successfully!")
-                                    }
+
+                                    val intent = Intent(this@Request, Result::class.java)
+                                    intent.putExtra("k",1)
+
+                                    startActivity(intent)
+
                                 }
                             })
-
-
                         }
                         else{
-                            Toast.makeText(this@Request, "no vacany", Toast.LENGTH_SHORT ).show()
+
+
+                            val intent = Intent(this@Request, Result::class.java)
+                            intent.putExtra("k",0)
+                            intent.putExtra("k1",number.text.toString())
+                            startActivity(intent)
+
                         }
+
                     }
 
                     override fun onCancelled(error: DatabaseError) {
                         TODO("Not yet implemented")
                     }
-                })}
+                })
+              }
 
             else{
                 val id= position
-                val userRef = myRef.child(id.toString()).child("critical")
+                val myRef1 = database.getReference("bed1")
+                val userRef = myRef1.child(id.toString()).child("critical")
                 var isDecrementDone = false
                 var isDecrementDone1 = false
+
                 userRef.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val value = dataSnapshot.child("vacancy").value.toString()
                         val vacancy = value.toInt()
-                        if (vacancy >= 1) { // check if the value has not been decremented
+
+                        if (vacancy >= 1) {
 
                             val occupiedRef = dataSnapshot.ref.child("occupied")
                             val vacant = dataSnapshot.ref.child("vacancy")
                             if (!isDecrementDone) {
                                 occupiedRef.runTransaction(object : Transaction.Handler {
                                     override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
+
                                         val currentOccupied =
                                             mutableData.getValue(Int::class.java) ?: 0
                                         mutableData.value =
                                             currentOccupied + 1 // decrement the value
+
                                         isDecrementDone = true
                                         return Transaction.success(mutableData)
                                     }
@@ -161,20 +187,25 @@ class Request : AppCompatActivity() {
                                         committed: Boolean,
                                         currentData: DataSnapshot?
                                     ) {
-                                        TODO("Not yet implemented")
+
+
                                     }
 
                                 })
                             }
                             if (!isDecrementDone1) {
+
                                 vacant.runTransaction(object : Transaction.Handler {
                                     override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
                                         val currentOccupied =
                                             mutableData.getValue(Int::class.java) ?: 0
                                         mutableData.value =
                                             currentOccupied - 1 // decrement the value
+
                                         isDecrementDone1 = true
                                         return Transaction.success(mutableData)
+
                                     }
 
                                     override fun onComplete(
@@ -182,41 +213,248 @@ class Request : AppCompatActivity() {
                                         committed: Boolean,
                                         currentData: DataSnapshot?
                                     ) {
-                                        TODO("Not yet implemented")
+
+                                        val intent = Intent(this@Request, Result::class.java)
+                                        intent.putExtra("k",1)
+                                        intent.putExtra("k1",number.text.toString())
+                                        startActivity(intent)
+
                                     }
                                 })
+
                             }
+
                             val firstName = firstname1.text.toString()
                             val age = age.text.toString()
                             val number1 = number.text.toString()
-                            val user1=user(firstName,age,number1,"normal")
+
+                            val user1 = user(firstName, age, number1, "critical")
                             val userRef = myRef.child(id.toString()).child("detail").push()
-                            userRef.setValue(user1, object : DatabaseReference.CompletionListener {
-                                override fun onComplete(
-                                    error: DatabaseError?,
-                                    ref: DatabaseReference
-                                ) {
-                                    if (error != null) {
-                                        // Handle error
-                                        Log.d(TAG, "Data could not be saved: $error")
-                                    } else {
-                                        // Insert successful
-                                        Log.d(TAG, "Data inserted successfully!")
-                                    }
-                                }
-                            })
+                            userRef.setValue(user1)
+
+
                         }
                         else{
-                            Toast.makeText(this@Request, "no vacany", Toast.LENGTH_SHORT ).show()
+
+                            val intent = Intent(this@Request, Result::class.java)
+                            intent.putExtra("k",0)
+                            startActivity(intent)
+
+
                         }
+
 
                     }
 
                     override fun onCancelled(error: DatabaseError) {
                         TODO("Not yet implemented")
                     }
-                })}
+                }
+                      )
 
+                }}
+            else{
+                if(name1=="normal"){
+                    val id= position
+                    val userRef = myRef.child(id.toString()).child("normal")
+                    var isDecrementDone = false
+                    var isDecrementDone1 = false
+
+                    userRef.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val value = dataSnapshot.child("vacancy").value.toString()
+                            val vacancy = value.toInt()
+
+                            if (vacancy >= 1) {
+                                val occupiedRef = dataSnapshot.ref.child("occupied")
+                                val vacant = dataSnapshot.ref.child("vacancy")
+                                if (!isDecrementDone) {
+                                    occupiedRef.runTransaction(object : Transaction.Handler {
+                                        override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
+                                            val currentOccupied =
+                                                mutableData.getValue(Int::class.java) ?: 0
+                                            mutableData.value =
+                                                currentOccupied + 1
+
+                                            isDecrementDone = true
+                                            return Transaction.success(mutableData)
+                                        }
+
+                                        override fun onComplete(
+                                            error: DatabaseError?,
+                                            committed: Boolean,
+                                            currentData: DataSnapshot?
+                                        ) {
+
+                                        }
+
+                                    })
+                                }
+                                if (!isDecrementDone1) {
+
+                                    vacant.runTransaction(object : Transaction.Handler {
+                                        override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
+                                            val currentOccupied =
+                                                mutableData.getValue(Int::class.java) ?: 0
+                                            mutableData.value =
+                                                currentOccupied - 1
+
+                                            isDecrementDone1 = true
+                                            return Transaction.success(mutableData)
+                                        }
+
+                                        override fun onComplete(
+                                            error: DatabaseError?,
+                                            committed: Boolean,
+                                            currentData: DataSnapshot?
+                                        ) {
+
+                                        }
+                                    })
+                                }
+
+                                val firstName = firstname1.text.toString()
+                                val age = age.text.toString()
+                                val number1 = number.text.toString()
+
+                                val user1=user(firstName,age,number1,"normal")
+                                val userRef = myRef.child(id.toString()).child("detail").push()
+                                userRef.setValue(user1, object : DatabaseReference.CompletionListener {
+                                    override fun onComplete(
+                                        error: DatabaseError?,
+                                        ref: DatabaseReference
+                                    ) {
+
+                                        val intent = Intent(this@Request, Result::class.java)
+                                        intent.putExtra("k",1)
+
+                                        startActivity(intent)
+
+                                    }
+                                })
+                            }
+                            else{
+
+
+                                val intent = Intent(this@Request, Result::class.java)
+                                intent.putExtra("k",0)
+                                intent.putExtra("k1",number.text.toString())
+                                startActivity(intent)
+
+                            }
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+                    })
+                }
+
+                else{
+                    val id= position
+                    val userRef = myRef.child(id.toString()).child("critical")
+                    var isDecrementDone = false
+                    var isDecrementDone1 = false
+
+                    userRef.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val value = dataSnapshot.child("vacancy").value.toString()
+                            val vacancy = value.toInt()
+
+                            if (vacancy >= 1) {
+
+                                val occupiedRef = dataSnapshot.ref.child("occupied")
+                                val vacant = dataSnapshot.ref.child("vacancy")
+                                if (!isDecrementDone) {
+                                    occupiedRef.runTransaction(object : Transaction.Handler {
+                                        override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
+
+                                            val currentOccupied =
+                                                mutableData.getValue(Int::class.java) ?: 0
+                                            mutableData.value =
+                                                currentOccupied + 1 // decrement the value
+
+                                            isDecrementDone = true
+                                            return Transaction.success(mutableData)
+                                        }
+
+                                        override fun onComplete(
+                                            error: DatabaseError?,
+                                            committed: Boolean,
+                                            currentData: DataSnapshot?
+                                        ) {
+
+
+                                        }
+
+                                    })
+                                }
+                                if (!isDecrementDone1) {
+
+                                    vacant.runTransaction(object : Transaction.Handler {
+                                        override fun doTransaction(mutableData: MutableData): Transaction.Result {
+
+                                            val currentOccupied =
+                                                mutableData.getValue(Int::class.java) ?: 0
+                                            mutableData.value =
+                                                currentOccupied - 1 // decrement the value
+
+                                            isDecrementDone1 = true
+                                            return Transaction.success(mutableData)
+
+                                        }
+
+                                        override fun onComplete(
+                                            error: DatabaseError?,
+                                            committed: Boolean,
+                                            currentData: DataSnapshot?
+                                        ) {
+
+                                            val intent = Intent(this@Request, Result::class.java)
+                                            intent.putExtra("k",1)
+                                            intent.putExtra("k1",number.text.toString())
+                                            startActivity(intent)
+
+                                        }
+                                    })
+
+                                }
+
+                                val firstName = firstname1.text.toString()
+                                val age = age.text.toString()
+                                val number1 = number.text.toString()
+
+                                val user1 = user(firstName, age, number1, "critical")
+                                val userRef = myRef.child(id.toString()).child("detail").push()
+                                userRef.setValue(user1)
+
+
+                            }
+                            else{
+
+                                val intent = Intent(this@Request, Result::class.java)
+                                intent.putExtra("k",0)
+                                startActivity(intent)
+
+
+                            }
+
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+                    }
+                    )
+
+                }
+
+            }
 
         }
 

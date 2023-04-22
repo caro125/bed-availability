@@ -53,4 +53,9 @@
     <string name="row3Name">Jason</string>
     <string name="row3Age">67</string>
     <string name="row3Surname">William</string>
+    <string name="title_activity_maps">MapsActivity</string>
+
+    <string name="app_name2">GoogleMapCurrentLocation</string>
+
+
 </resources>

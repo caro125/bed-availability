@@ -21,11 +21,13 @@ class quiz : AppCompatActivity(), View.OnClickListener {
     var currentQuestionIndex = 0
     var selectedAnswer = ""
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
         totalQuestionTextView = findViewById(R.id.total_question)
         questionTextView = findViewById(R.id.question)
+
         ansA = findViewById(R.id.ans_a)
         ansB = findViewById(R.id.ans_b)
         ansC = findViewById(R.id.ans_c)
@@ -55,10 +57,12 @@ class quiz : AppCompatActivity(), View.OnClickListener {
         } else {
             pass = "normal"
         }
+        val check=intent.getIntExtra("value",0)
         val position = intent.getIntExtra("key1", 0)
         val intent = Intent(this, Request::class.java)
         intent.putExtra("key1", position)
         intent.putExtra("key", pass)
+        intent.putExtra("value",check)
         startActivity(intent)
     }
 

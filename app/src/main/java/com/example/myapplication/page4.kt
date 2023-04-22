@@ -1,45 +1,38 @@
 package com.example.myapplication
 
-
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
-import kotlin.collections.ArrayList
-class page1 : AppCompatActivity() {
+
+class page4 : AppCompatActivity() {
     private lateinit var newRecylerview : RecyclerView
     private lateinit var adapter: Myadapter
-    private lateinit var newArrayList : ArrayList<hospital>
+    private lateinit var newArrayList : ArrayList<hospital1>
     private lateinit var news : Array<String>
 
     lateinit var imageId : Array<Int>
     lateinit var heading : Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_page1)
+        setContentView(R.layout.activity_page4)
         imageId = arrayOf(
-            R.drawable.apolo,
-            R.drawable.srm,
-            R.drawable.government ,
-            R.drawable.cmc,
+            R.drawable.meenakshi,
+
+            R.drawable.kj,
+            R.drawable.ramakrishna
         )
 
         heading = arrayOf(
-            "APOLLO HOSPITAL TRICHY",
-            "SRM TRICHY",
-        "GOVERNMENT MEDICAL COLLEGE TRICHY",
-            "CMC VELLORE",)
+            "Sree Meenakshi Hospitals",
+            "K .J. Hospital",
+            "Sri Ramakrishna Hospital")
         news = arrayOf(
-            getString(R.string.appolo),
-
-            getString(R.string.srm),
-            getString(R.string.gcc),
-            getString(R.string.cmc),
+            "Sree Meenakshi Hospitals 269, Palakkad Main Rd, Kuniamuthur, Coimbatore",
+            "K .J. Hospital W-59, Near Ayyappan Kovil, Opposite Police Camp, W- Block, Kovai Pudur, Coimbatore",
+            "Sri Ramakrishna Hospital Gandhipuram, Coimbatore 395, Sarojini Naidu Road, Siddhapudur"
         )
         newRecylerview =findViewById(R.id.recyclerView)
 
@@ -51,7 +44,7 @@ class page1 : AppCompatActivity() {
         // Attach the adapter to the RecyclerView
         //newRecylerview.adapter = adapter
 
-        newArrayList = arrayListOf<hospital>()
+        newArrayList = arrayListOf<hospital1>()
 
         getUserdata()
 
@@ -61,21 +54,23 @@ class page1 : AppCompatActivity() {
 
         for(i in imageId.indices){
 
-            val news = hospital(imageId[i],heading[i])
+            val news = hospital1(imageId[i],heading[i])
             newArrayList.add(news)
 
         }
-        var adapter=Myadapter(newArrayList)
-     newRecylerview.adapter=adapter
+        var adapter=Myadapter1(newArrayList)
+        newRecylerview.adapter=adapter
         //button click
-        adapter.setOnItemClickListener(object:Myadapter.onItemClickListener{
+        adapter.setOnItemClickListener(object:Myadapter1.onItemClickListener{
             override fun onItemClick(position: Int) {
 
 
-                val intent = Intent(this@page1,NewsActivity::class.java)
+                val intent = Intent(this@page4,NewsActivity1::class.java)
                 intent.putExtra("heading",newArrayList[position].heading)
                 intent.putExtra("imageId",newArrayList[position].titleImage)
                 intent.putExtra("news",news[position])
+                intent.putExtra("key1",position)
+
 
 
                 startActivity(intent)

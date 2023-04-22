@@ -6,21 +6,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
-import android.widget.Toolbar
-import androidx.appcompat.widget.SearchView
 
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.Myadapter
 import java.util.*
 import kotlin.collections.ArrayList
 class page2 : AppCompatActivity() {

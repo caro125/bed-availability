@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
-class Myadapter(private val list: ArrayList<hospital>) :
-    RecyclerView.Adapter<Myadapter.MyViewHolder>() {
+class Myadapter1(private val list: ArrayList<hospital1>) :
+    RecyclerView.Adapter<Myadapter1.MyViewHolder>() {
 
     private var mListener: onItemClickListener? = null
 

@@ -1,57 +1,78 @@
 package com.example.myapplication
-
-
-import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.content.pm.PackageManager
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
+import android.os.Bundle
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 
+class Adminpage1 : AppCompatActivity(), OnMapReadyCallback {
 
-class Adminpage1 : AppCompatActivity() {
-    private lateinit var firstname1: EditText
-    private lateinit var lastname1: EditText
-    private lateinit var text: TextView
+    private lateinit var currentLocation: Location
+    private lateinit var fusedLocationProvider: FusedLocationProviderClient
+    private val permissionCode = 101
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_adminpage1)
-       firstname1 = findViewById(R.id.inputFirstName)
-        lastname1= findViewById(R.id.inputLastName)
-        text= findViewById(R.id.textViewResult)
-        val Button = findViewById<Button>(R.id.saveButton)
-        Button.setOnClickListener {
-            val firstName = firstname1.text.toString()
-            val lastName = lastname1.text.toString()
+        setContentView(R.layout.activity_main)
 
-            saveFireStore(firstName, lastName)
+        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this)
+        fetchLocation()
+    }
 
+    private fun fetchLocation() {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+            PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) !=
+            PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), permissionCode)
+            return
         }
 
-    }
+        val task = fusedLocationProvider.lastLocation
+        task.addOnSuccessListener { location ->
+            if (location != null){
+                currentLocation = location
+                Toast.makeText(this, currentLocation.latitude.toString() + "" + currentLocation.longitude.toString(), Toast.LENGTH_SHORT).show()
 
-    fun saveFireStore(firstname: String, lastname: String) {
-        val db = FirebaseFirestore.getInstance()
-        val user: MutableMap<String, Any> = HashMap()
-        user["firstName"] = firstname
-        user["lastName"] = lastname
-
-        db.collection("users")
-            .add(user)
-            .addOnSuccessListener {
-                Toast.makeText(this@Adminpage1, "record added successfully ", Toast.LENGTH_SHORT ).show()
+                val supportMapFragment = (supportFragmentManager.findFragmentById(R.id.myMap) as
+                        SupportMapFragment?)!!
+                supportMapFragment.getMapAsync(this)
             }
-            .addOnFailureListener{
-                Toast.makeText(this@Adminpage1, "record Failed to add ", Toast.LENGTH_SHORT ).show()
+        }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        val latLng = LatLng(currentLocation.latitude, currentLocation.longitude)
+        val makerOptions = MarkerOptions().position(latLng).title("Hello I am here")
+        googleMap?.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        googleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5f))
+        googleMap?.addMarker(makerOptions)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            permissionCode -> if (grantResults.isEmpty() && grantResults[0] ==
+                PackageManager.PERMISSION_GRANTED){
+                fetchLocation()
             }
-
+        }
     }
-
-
-    }
+}

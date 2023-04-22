@@ -29,7 +29,7 @@ class Login : AppCompatActivity() {
             val password = passwordEditText.text.toString()
 
             if (validateUserCredentials(username, password)) {
-                val intent = Intent(this, Adminpage1::class.java)
+                val intent = Intent(this, MapsActivity::class.java)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
