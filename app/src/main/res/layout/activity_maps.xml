@@ -41,12 +41,19 @@
             android:id="@+id/btOpenMap1"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-
             android:text="See near by hospitals"
             android:textColor="@android:color/white"
             android:layout_marginTop="30dp"
             android:visibility="gone"
             />
+
+        <Button
+            android:id="@+id/btEmergencyCall"
+            android:layout_width="150dp"
+            android:layout_marginTop="30dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:text="Emergency Call" />
 
     </LinearLayout>
 

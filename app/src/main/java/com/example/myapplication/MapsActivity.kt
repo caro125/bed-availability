@@ -164,6 +164,13 @@ class MapsActivity : AppCompatActivity() {
                     val intent= Intent(this,page4::class.java)
                     startActivity(intent)
                 }
+                val btEmergencyCall = findViewById<Button>(R.id.btEmergencyCall)
+                btEmergencyCall.visibility = View.VISIBLE
+                btEmergencyCall.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:6379542403"))
+                    startActivity(intent)
+                }
+
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed on getting current location",
