@@ -154,8 +154,8 @@ class Request : AppCompatActivity() {
 
             else{
                 val id= position
-                val myRef1 = database.getReference("bed1")
-                val userRef = myRef1.child(id.toString()).child("critical")
+                val myRef = database.getReference("bed")
+                val userRef = myRef.child(id.toString()).child("critical")
                 var isDecrementDone = false
                 var isDecrementDone1 = false
 
@@ -256,7 +256,8 @@ class Request : AppCompatActivity() {
             else{
                 if(name1=="normal"){
                     val id= position
-                    val userRef = myRef.child(id.toString()).child("normal")
+                    val myRef1 = database.getReference("bed1")
+                    val userRef = myRef1.child(id.toString()).child("normal")
                     var isDecrementDone = false
                     var isDecrementDone1 = false
 
@@ -320,7 +321,7 @@ class Request : AppCompatActivity() {
                                 val number1 = number.text.toString()
 
                                 val user1=user(firstName,age,number1,"normal")
-                                val userRef = myRef.child(id.toString()).child("detail").push()
+                                val userRef = myRef1.child(id.toString()).child("detail").push()
                                 userRef.setValue(user1, object : DatabaseReference.CompletionListener {
                                     override fun onComplete(
                                         error: DatabaseError?,
@@ -355,7 +356,8 @@ class Request : AppCompatActivity() {
 
                 else{
                     val id= position
-                    val userRef = myRef.child(id.toString()).child("critical")
+                    val myRef1= database.getReference("bed1")
+                    val userRef = myRef1.child(id.toString()).child("critical")
                     var isDecrementDone = false
                     var isDecrementDone1 = false
 
@@ -429,7 +431,7 @@ class Request : AppCompatActivity() {
                                 val number1 = number.text.toString()
 
                                 val user1 = user(firstName, age, number1, "critical")
-                                val userRef = myRef.child(id.toString()).child("detail").push()
+                                val userRef = myRef1.child(id.toString()).child("detail").push()
                                 userRef.setValue(user1)
 
 
